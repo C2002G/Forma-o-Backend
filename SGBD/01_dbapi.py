@@ -29,14 +29,47 @@ def atualizar_registro(conexao, cursor, nome, email, id):
     cursor.execute("UPDATE clientes SET nome=?, email=? WHERE id=?;", data)
     conexao.commit()
 
+
 def remover_registro(conexao, cursor, id):
     data = (id,)
     cursor.execute("DELETE FROM clientes WHERE id=?;", data)
     conexao.commit()
+
 
 # atualizar_registro(conexao, cursor, "Lu", "lu@gmail.com", 1)
 
 
 # inserir_dados(conexao, cursor, "temp", "temp@gmail.com")
 
-remover_registro(conexao, cursor, 3)
+# remover_registro(conexao, cursor, 3)
+
+
+def inserir_muitos(conexao, cursor, dados):
+    cursor.executemany("INSERT INTO clientes (nome, email) VALUES (?,?)", dados)
+    conexao.commit()
+
+
+# caso precise ver em outro lugar
+def recuperar_clientes(cursor, id):
+    cursor.execute("SELECT * FROM clientes WHERE id=?", (id,))
+    return cursor.fetchone()
+
+
+def listar_clientes(cursor):
+    return cursor.execute("SELECT * FROM clientes;")
+
+
+cliente = recuperar_clientes(cursor, 1)
+print(cliente)
+
+clientes = listar_clientes(cursor)
+for cliente in clientes:
+    print(cliente)
+
+# dados = [
+#     ("Ivi", "ivi@gmail.com"),
+#     ("floki", "floki@gmail.com"),
+#     ("skol", "skol@gmail.com"),
+# ]
+
+# inserir_muitos(conexao, cursor, dados)
