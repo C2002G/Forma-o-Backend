@@ -1,0 +1,7 @@
+pip instal poetry
+
+poetry init
+     aspergunta e tals..
+
+poetry install
+
