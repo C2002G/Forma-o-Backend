@@ -10,7 +10,8 @@ requires-python = ">=3.13"
 dependencies = [
     "flask",
     "flask-sqlalchemy",
-    "sqlalchemy (>=2.0.44,<3.0.0)"
+    "sqlalchemy (>=2.0.44,<3.0.0)",
+    "flask-migrate"
 ]
 
 

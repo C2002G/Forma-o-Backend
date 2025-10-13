@@ -6,6 +6,8 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String
 import sqlalchemy as sa
 from datetime import datetime
+from flask_migrate import Migrate
+
 
 import click
 
@@ -15,12 +17,13 @@ class Base(DeclarativeBase):
 
 
 db = SQLAlchemy(model_class=Base)
-
+# https://flask-migrate.readthedocs.io/en/latest/
+migrate = Migrate()
 #ORM
 class User(db.Model):
     id: Mapped[int] = mapped_column(sa.Integer, primary_key=True)
     username: Mapped[str] = mapped_column(sa.String, unique=True)
-
+    active: Mapped[bool] = mapped_column(sa.Boolean, default=True)
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, username={self.username!r})"
 
@@ -32,7 +35,7 @@ class Post(db.Model):
     author_id: Mapped[int] = mapped_column(sa.ForeignKey("user.id"))
 
     def __repr__(self) -> str:
-        return f"Post(id={self.id!r}, title={self.title!r}, author_id={self.author_id!r})"
+        return f"Post(id={self.id!r}, title={self.title!r}, author_id={self.author_id!r}, active={self.active!r})"
     
 
 
@@ -47,6 +50,7 @@ def init_db_command():
 
 
 def create_app(test_config=None):
+    
     # create and configure the app
     app = Flask(
         __name__, instance_relative_config=True
@@ -68,7 +72,7 @@ def create_app(test_config=None):
 
     # initialize extensions
     db.init_app(app)
-
+    migrate.init_app(app, db)
     #register blueprint
     from src.controllers import user, post
 
