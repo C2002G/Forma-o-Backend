@@ -2,13 +2,19 @@ from http import HTTPStatus
 from flask import Blueprint, request
 import sqlalchemy as sa
 from src.app import User, db
+from flask_jwt_extended import jwt_required
+from src.utils import requires_role
 
 app = Blueprint("user", __name__, url_prefix="/users")
 
 
 def create_user():
     data = request.json
-    user = User(username=data["username"])
+    user = User(
+        username=data["username"],
+        password=data["password"],
+        role_id=data["role_id"],
+    )
     db.session.add(user)
     db.session.commit()
 
@@ -20,13 +26,19 @@ def list_users():
         {
             "id": user.id,
             "username": user.username,
+            "role": {
+                "id": user.role.id,
+                "name": user.role.name,
+            },
         }
         for user in users
     ]
 
 
 @app.route("/", methods=["GET", "POST"])
-def handle_user():
+@jwt_required()
+@requires_role("admin")
+def handle_user():     
     if request.method == "POST":
         create_user()
         return {"message": "User created!"}, HTTPStatus.CREATED  # PADRÂO REST
@@ -58,6 +70,7 @@ def update_user(user_id):
         "id": user.id,
         "username": user.username,
     }
+
 
 @app.route("/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
