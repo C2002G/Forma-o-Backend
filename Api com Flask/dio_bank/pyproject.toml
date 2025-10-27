@@ -11,10 +11,17 @@ dependencies = [
     "flask",
     "flask-sqlalchemy",
     "sqlalchemy (>=2.0.44,<3.0.0)",
-    "flask-migrate"
+    "flask-migrate",
+    "pytest",
+    "pytest-mock"
 ]
 
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+
