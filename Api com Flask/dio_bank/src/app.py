@@ -86,7 +86,7 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    # register blueprints
+    # register blueprintss
     from src.controllers import user, post, auth, role
     
 
