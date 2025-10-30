@@ -58,3 +58,42 @@ mudei no models
     agora temho q sair do ipython e fazer o shell novamente
         dps poetry run python ./manage.py shell -i ipython
             from polls.models import Choice, Question
+
+# interface adm
+
+    criar um super user 
+        python manage.py createsuperuser
+
+
+    criar um templlate com a infos da doc
+        https://docs.djangoproject.com/pt-br/5.2/ref/contrib/admin/#theming-support
+
+    e dps mudar no settings                    
+            TEMPLATES = [
+                {
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'DIRS': [Path(BASE_DIR, "templates")],
+                    'APP_DIRS': True,
+                    'OPTIONS': {
+                        'context_processors': [
+                            'django.template.context_processors.request',
+                            'django.contrib.auth.context_processors.auth',
+                            'django.contrib.messages.context_processors.messages',
+                        ],
+                    },
+                },
+            ]
+
+
+        verbose name muda os nomes dos titulos
+            https://docs.djangoproject.com/en/5.2/ref/applications/
+
+
+        e verbosename nos menus        
+            class Meta:
+                verbose_name = "Opção"
+                verbose_name_plural = "Opções"
+
+
+
+    NO settings tem como mudar a lingua
