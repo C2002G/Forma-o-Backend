@@ -59,7 +59,7 @@ mudei no models
         dps poetry run python ./manage.py shell -i ipython
             from polls.models import Choice, Question
 
-# interface adm
+#  
 
     criar um super user 
         python manage.py createsuperuser
