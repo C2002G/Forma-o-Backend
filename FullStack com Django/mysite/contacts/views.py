@@ -1,8 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.conf import settings
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import permission_required
 from .forms import NameForm, ContactForm
 
@@ -35,5 +33,3 @@ def get_name(request):
 
 def thanks(request, name):
     return HttpResponse(f"Obrigado, {name}!")
-
-
