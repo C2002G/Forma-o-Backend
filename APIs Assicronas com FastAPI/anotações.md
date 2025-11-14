@@ -11,3 +11,7 @@ para verificar se ta td certo
     fastapi.__version__
 
 uvicorn src.main:app --reload (salvar e run)
+
+
+n fz
+    conexão banco de dados específicos
