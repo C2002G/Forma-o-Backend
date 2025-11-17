@@ -13,3 +13,13 @@ para verificar se ta td certo
 uvicorn src.main:app --reload (salvar e run)
 
 
+ CONEXÃO A BANCO DE DADOS ASSÍCRONO
+    add
+        greenlet
+        aiosqlite
+        sqlalchemy
+        databases
+
+
+n fiz 
+    autenticação e autorização em FASTAPI

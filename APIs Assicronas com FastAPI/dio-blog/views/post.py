@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class PostOut(BaseModel):
+    id: int
     title: str
-    date: datetime
-    published: bool
+    content: str
+    published_at: datetime | None = None

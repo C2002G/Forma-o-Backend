@@ -1,47 +1,21 @@
-from fastapi import status, APIRouter
-from datetime import datetime, UTC
-from schemas.post import PostIn
+from fastapi import status, APIRouter, Depends
+from schemas.post import PostIn, PostUpdateIn
 from views.post import PostOut
+from models.post import posts
+from database import database
 
 # https://fastapi.tiangolo.com/tutorial/body/
 
 router = APIRouter(prefix="/posts")
 
-
-fake_db = [
-    {
-        "title": "Criando uma aplicação com Django",
-        "date": datetime.now(UTC),
-        "published": True,
-    },
-    {
-        "title": "Criando uma aplicação com Flask",
-        "date": datetime.now(UTC),
-        "published": True,
-    },
-    {
-        "title": "Criando uma aplicação com FastAPI",
-        "date": datetime.now(UTC),
-        "published": True,
-    },
-    {
-        "title": "Criando uma aplicação com scarlet",
-        "date": datetime.now(UTC),
-        "published": True,
-    },
-]
-
-
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostOut)
-def create_post(post: PostIn):
-    fake_db.append(post.model_dump())
-    return post
+service = PostService()
 
 
 @router.get("/", response_model=list[PostOut])
-def read_posts(published: bool, limit: int, skip: int = 0):
-    tail = skip + limit
-    return [post for post in fake_db[skip:tail] if post["published"] is published]
+async def read_posts(published: bool, limit: int, skip: int = 0):
+    query = posts.select()
+    return await database.fetch_all(query)
+
     # posts = []
     # for post in fake_db:
     #     if len(posts) == limit:
@@ -52,11 +26,27 @@ def read_posts(published: bool, limit: int, skip: int = 0):
     # def read_posts(published: bool, skip: int = 0, limit: int = len(fake_db)):
 
 
-@router.get("/{framework}", response_model=PostOut)
-def read_framework_posts(framework):
-    return {
-        "posts": [
-            {"title": f"Criando uma aplicação {framework}", "date": datetime.now(UTC)},
-            {"title": f"Globalizando uma app {framework}", "date": datetime.now(UTC)},
-        ]
-    }
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostOut)
+async def create_post(post: PostIn):
+    command = posts.insert().values(
+        title=post.title,
+        content=post.content,
+        published_at=post.published_at,
+        published=post.published,
+    )
+    last_id = await database.execute(command)
+    return {**post.model_dump(), "id": last_id}
+
+@router.get("/{id}", response_model=PostOut)
+async def read_post(id: int):
+    return await service.read(id)
+
+
+@router.patch("/{id}", response_model=PostOut)
+async def update_post(id: int, post: PostUpdateIn):
+    return await service.update(id=id, post=post)
+
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+async def delete_post(id: int):
+    await service.delete(id)
