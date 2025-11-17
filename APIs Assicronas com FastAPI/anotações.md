@@ -23,3 +23,6 @@ uvicorn src.main:app --reload (salvar e run)
 
 n fiz 
     autenticação e autorização em FASTAPI
+        pyjwt
+        
+    pytest

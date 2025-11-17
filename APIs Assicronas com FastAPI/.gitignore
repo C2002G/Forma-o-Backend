@@ -3,6 +3,7 @@ anotações.md
 # Arquivo de anotações pessoais
 **/anotações.md
 *.md.bak
+gabarito/
 
 # Python
 __pycache__/
